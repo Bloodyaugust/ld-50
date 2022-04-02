@@ -32,6 +32,8 @@ Functional="*res://lib/util/Functional.gd"
 GDUtil="*res://lib/util/GDUtil.gd"
 ClientConstants="*res://constants/ClientConstants.gd"
 GameConstants="*res://constants/GameConstants.gd"
+UnitController="*res://scripts/controllers/UnitController.gd"
+CommandController="*res://scripts/controllers/CommandController.gd"
 
 [display]
 
