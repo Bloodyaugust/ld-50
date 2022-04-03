@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://sprites/structures/medievalStructure_02.png" type="Texture" id=1]
+[ext_resource path="res://sprites/structures/medievalStructure_06.png" type="Texture" id=2]
+[ext_resource path="res://actors/Spawner.gd" type="Script" id=3]
+
+[node name="Spawner" type="Node2D"]
+position = Vector2( -123, -44 )
+script = ExtResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+
+[node name="Sprite2" type="Sprite" parent="."]
+position = Vector2( 0, -64 )
+texture = ExtResource( 1 )

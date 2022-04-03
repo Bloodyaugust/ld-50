@@ -71,7 +71,7 @@ func _physics_process(delta):
     for i in range(1, _distance_frames.size()):
       _total_distance += _distance_frames[i].distance_to(_distance_frames[i - 1])
 
-    if _distance_frames.size() >= 16 && _total_distance / _distance_frames.size() < (unit_data.move_speed * delta) / 2:
+    if _distance_frames.size() >= 16 && _total_distance / _distance_frames.size() < (unit_data.move_speed * delta) / 4:
       _state = UNIT_STATES.IDLE
       if _last_command.type == CommandController.COMMAND_TYPES.MOVE:
         _last_command = null
@@ -81,7 +81,12 @@ func _physics_process(delta):
       _state = UNIT_STATES.IDLE
       _last_command = null
 
+  if alive && _state == UNIT_STATES.IDLE:
+    move_and_slide(Vector2(0, sin(Time.get_ticks_msec())) / 16)
+
 func _process(delta):
+  var _advance_animation:bool = false
+
   if alive:
     if _health <= 0:
       alive = false
@@ -127,14 +132,23 @@ func _process(delta):
             CommandController.COMMAND_TYPES.MOVE:
               _do_move()
         else:
+          if _animation_player.current_animation != "idle":
+            _advance_animation = true
           _animation_player.play("idle")
 
     match _state:
       UNIT_STATES.MOVING:
+        if _animation_player.current_animation != "move":
+          _advance_animation = true
         _animation_player.play("move")
 
       UNIT_STATES.ATTACK_MOVING:
+        if _animation_player.current_animation != "move":
+          _advance_animation = true
         _animation_player.play("move")
+
+    if _advance_animation:
+      _animation_player.advance(rand_range(0.0, 0.25) * _animation_player.current_animation_length)
     
   if Store.state.debug:
     _state_label.visible = true

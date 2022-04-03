@@ -7,7 +7,7 @@ var state: Dictionary = {
   "client_view": "",
   "game": "",
   "unit_selection": [],
-  "debug": true,
+  "debug": false,
   "attack_move_command_modifier": false
  }
 
