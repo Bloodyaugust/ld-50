@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://actors/Unit.gd" type="Script" id=1]
 [ext_resource path="res://sprites/units/medievalUnit_03.png" type="Texture" id=2]
 [ext_resource path="res://resources/themes/kenney/kenney.tres" type="Theme" id=3]
+[ext_resource path="res://data/units/spearman.tres" type="Resource" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 14.0
@@ -93,11 +94,7 @@ tracks/1/keys = {
 
 [node name="Unit" type="KinematicBody2D" groups=["units"]]
 script = ExtResource( 1 )
-attack_range = 45.0
-attack_interval = 1.0
-damage = 1.0
-health = 2.0
-move_speed = 25.0
+unit_data = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

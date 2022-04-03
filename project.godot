@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "PersistentStore",
 "language": "GDScript",
 "path": "res://scripts/classes/PersistentStore.gd"
+}, {
+"base": "Resource",
+"class": "UnitData",
+"language": "GDScript",
+"path": "res://data/UnitData.gd"
 } ]
 _global_script_class_icons={
-"PersistentStore": ""
+"PersistentStore": "",
+"UnitData": ""
 }
 
 [application]

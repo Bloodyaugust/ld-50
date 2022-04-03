@@ -7,11 +7,7 @@ enum UNIT_STATES {
   ATTACK_MOVING
 }
 
-export var attack_range:float
-export var attack_interval:float
-export var damage:float
-export var health:float
-export var move_speed:float
+export var unit_data:Resource
 export var team:int
 
 var alive:bool = true
@@ -36,13 +32,13 @@ func _do_move() -> void:
 
 func _draw():
   if Store.state.debug:
-    draw_arc(Vector2.ZERO, attack_range, 0, PI * 2, 16, Color.red)
+    draw_arc(Vector2.ZERO, unit_data.attack_range, 0, PI * 2, 16, Color.red)
 
   if self in Store.state.unit_selection:
     draw_arc(Vector2.ZERO, 25, 0, PI * 2, 16, Color.green)
 
 func _is_valid_target(potential_target) -> bool:
-  return GDUtil.reference_safe(potential_target) && potential_target.alive && potential_target.team != team && potential_target.global_position.distance_to(global_position) <= attack_range
+  return GDUtil.reference_safe(potential_target) && potential_target.alive && potential_target.team != team && potential_target.global_position.distance_to(global_position) <= unit_data.attack_range
 
 func _on_command_do(command:Dictionary) -> void:
   match command.type:
@@ -64,7 +60,7 @@ func _physics_process(delta):
   if alive && (_state == UNIT_STATES.MOVING || _state == UNIT_STATES.ATTACK_MOVING):
     var _direction_vector:Vector2 = global_position.direction_to(_last_command.target)
 
-    move_and_slide(_direction_vector * move_speed)
+    move_and_slide(_direction_vector * unit_data.move_speed)
 
     _distance_frames.append(global_position)
     if _distance_frames.size() > 64:
@@ -74,13 +70,13 @@ func _physics_process(delta):
     for i in range(1, _distance_frames.size()):
       _total_distance += _distance_frames[i].distance_to(_distance_frames[i - 1])
 
-    if _distance_frames.size() >= 16 && _total_distance / _distance_frames.size() < (move_speed * delta) / 2:
+    if _distance_frames.size() >= 16 && _total_distance / _distance_frames.size() < (unit_data.move_speed * delta) / 2:
       _state = UNIT_STATES.IDLE
       if _last_command.type == CommandController.COMMAND_TYPES.MOVE:
         _last_command = null
         return
 
-    if global_position.distance_to(_last_command.target) <= move_speed * delta:
+    if global_position.distance_to(_last_command.target) <= unit_data.move_speed * delta:
       _state = UNIT_STATES.IDLE
       _last_command = null
 
@@ -118,9 +114,9 @@ func _process(delta):
         if _time_to_attack <= 0 && _is_valid_target(_attack_target):
           _animation_player.play("attack")
           CommandController.add_command(CommandController.create_command_damage({
-            "damage": damage
+            "damage": unit_data.damage
           }, _attack_target))
-          _time_to_attack = attack_interval
+          _time_to_attack = unit_data.attack_interval
 
       UNIT_STATES.IDLE:
         if _last_command:
@@ -158,7 +154,7 @@ func _process(delta):
 func _ready():
   CommandController.connect("command_do", self, "_on_command_do")
 
-  _health = health
+  _health = unit_data.health
   _state = UNIT_STATES.IDLE
 
   _animation_player.play("idle")
