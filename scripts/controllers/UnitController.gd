@@ -29,12 +29,20 @@ func _unhandled_input(event:InputEvent):
       print("drawing started")
       _drawing_selection = true
       _drawing_selection_start = get_global_mouse_position()
+      Store.set_state("attack_move_command_modifier", false)
     else:
       _on_end_drawing_selection()
 
   if event is InputEventMouseButton && event.button_index == BUTTON_RIGHT:
     if Store.state.unit_selection.size() && !event.is_pressed():
-      CommandController.add_command(CommandController.create_command_move(Store.state.unit_selection, get_global_mouse_position()))
+      if Store.state.attack_move_command_modifier:
+        CommandController.add_command(CommandController.create_command_attack_move(Store.state.unit_selection, get_global_mouse_position()))
+      else:
+        CommandController.add_command(CommandController.create_command_move(Store.state.unit_selection, get_global_mouse_position()))
+
+  if event is InputEventKey && event.is_action_released("attack_move"):
+    if Store.state.unit_selection.size():
+      Store.set_state("attack_move_command_modifier", !Store.state.attack_move_command_modifier)
 
 func _process(delta):
   update()

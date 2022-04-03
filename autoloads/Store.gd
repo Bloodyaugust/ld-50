@@ -7,7 +7,8 @@ var state: Dictionary = {
   "client_view": "",
   "game": "",
   "unit_selection": [],
-  "debug": true
+  "debug": true,
+  "attack_move_command_modifier": false
  }
 
 func start_game() -> void:
