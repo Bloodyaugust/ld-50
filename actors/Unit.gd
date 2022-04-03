@@ -13,6 +13,7 @@ export var team:int
 var alive:bool = true
 
 onready var _animation_player:AnimationPlayer = find_node("AnimationPlayer")
+onready var _sprite:Sprite = find_node("Sprite")
 onready var _state_label:Label = find_node("State")
 
 var _attack_target
@@ -155,6 +156,10 @@ func _ready():
   CommandController.connect("command_do", self, "_on_command_do")
 
   _health = unit_data.health
+  _sprite.texture = unit_data.sprite
   _state = UNIT_STATES.IDLE
+
+  for _group in unit_data.groups:
+    add_to_group(_group)
 
   _animation_player.play("idle")

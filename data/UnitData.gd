@@ -6,3 +6,5 @@ export var attack_interval:float
 export var damage:float
 export var health:float
 export var move_speed:float
+export var sprite:Texture
+export var groups:Array
