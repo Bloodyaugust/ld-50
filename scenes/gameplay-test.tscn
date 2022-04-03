@@ -29,21 +29,28 @@ position = Vector2( 14, -19 )
 
 [node name="Unit8" parent="." instance=ExtResource( 2 )]
 position = Vector2( 190, 13 )
+team = 1
 
 [node name="Unit9" parent="." instance=ExtResource( 2 )]
 position = Vector2( 160, 40 )
+team = 1
 
 [node name="Unit10" parent="." instance=ExtResource( 2 )]
 position = Vector2( 155, 6 )
+team = 1
 
 [node name="Unit11" parent="." instance=ExtResource( 2 )]
 position = Vector2( 182, -24 )
+team = 1
 
 [node name="Unit12" parent="." instance=ExtResource( 2 )]
 position = Vector2( 176, -4 )
+team = 1
 
 [node name="Unit13" parent="." instance=ExtResource( 2 )]
 position = Vector2( 175, 29 )
+team = 1
 
 [node name="Unit14" parent="." instance=ExtResource( 2 )]
 position = Vector2( 204, -6 )
+team = 1
