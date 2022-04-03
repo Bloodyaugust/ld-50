@@ -16,6 +16,7 @@ export var team:int
 
 var alive:bool = true
 
+onready var _animation_player:AnimationPlayer = find_node("AnimationPlayer")
 onready var _state_label:Label = find_node("State")
 
 var _attack_target
@@ -115,6 +116,7 @@ func _process(delta):
     match _state:
       UNIT_STATES.ATTACKING:
         if _time_to_attack <= 0 && _is_valid_target(_attack_target):
+          _animation_player.play("attack")
           CommandController.add_command(CommandController.create_command_damage({
             "damage": damage
           }, _attack_target))
@@ -127,6 +129,15 @@ func _process(delta):
               _do_attack_move()
             CommandController.COMMAND_TYPES.MOVE:
               _do_move()
+        else:
+          _animation_player.play("idle")
+
+    match _state:
+      UNIT_STATES.MOVING:
+        _animation_player.play("move")
+
+      UNIT_STATES.ATTACK_MOVING:
+        _animation_player.play("move")
     
   if Store.state.debug:
     _state_label.visible = true
@@ -149,3 +160,5 @@ func _ready():
 
   _health = health
   _state = UNIT_STATES.IDLE
+
+  _animation_player.play("idle")
