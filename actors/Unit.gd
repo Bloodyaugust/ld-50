@@ -20,6 +20,9 @@ var _attack_target
 var _health:float
 var _distance_frames:Array = []
 var _last_command
+var _potential_targets:Array = []
+var _range_area:RID
+var _range_shape:RID
 var _state:int
 var _time_to_attack:float
 
@@ -39,7 +42,7 @@ func _draw():
     draw_arc(Vector2.ZERO, 25, 0, PI * 2, 16, Color.green)
 
 func _is_valid_target(potential_target) -> bool:
-  return GDUtil.reference_safe(potential_target) && potential_target.alive && potential_target.team != team && potential_target.global_position.distance_to(global_position) <= unit_data.attack_range
+  return GDUtil.reference_safe(potential_target) && potential_target.alive && potential_target.team != team
 
 func _on_command_do(command:Dictionary) -> void:
   match command.type:
@@ -57,6 +60,14 @@ func _on_command_do(command:Dictionary) -> void:
       if self == command.target:
         _health -= command.data.damage
 
+func _on_range_area_body_monitor(addedOrRemoved, objectRID, objectIID, objectShapeIDX, areaShapeIDX) -> void:
+  if addedOrRemoved == Physics2DServer.AREA_BODY_ADDED:
+    _potential_targets.append(instance_from_id(objectIID))
+  else:
+    _potential_targets.erase(instance_from_id(objectIID))
+    if _attack_target == instance_from_id(objectIID):
+      _attack_target = null
+        
 func _physics_process(delta):
   if alive && (_state == UNIT_STATES.MOVING || _state == UNIT_STATES.ATTACK_MOVING):
     var _direction_vector:Vector2 = global_position.direction_to(_last_command.target)
@@ -94,14 +105,13 @@ func _process(delta):
 
   if alive:
     _time_to_attack -= delta
+    Physics2DServer.area_set_transform(_range_area, Transform2D(0, global_position))
 
     if _state == UNIT_STATES.IDLE || _state == UNIT_STATES.ATTACK_MOVING:
       if !_is_valid_target(_attack_target):
         _attack_target = null
 
-        var _units = get_tree().get_nodes_in_group("units")
-
-        for _unit in _units:
+        for _unit in _potential_targets:
           if _is_valid_target(_unit):
             _attack_target = _unit
             break
@@ -172,6 +182,14 @@ func _ready():
   _health = unit_data.health
   _sprite.texture = unit_data.sprite
   _state = UNIT_STATES.IDLE
+
+  _range_area = Physics2DServer.area_create()
+  _range_shape = Physics2DServer.circle_shape_create()
+
+  Physics2DServer.shape_set_data(_range_shape, unit_data.attack_range / 2)
+  Physics2DServer.area_add_shape(_range_area, _range_shape)
+  Physics2DServer.area_set_space(_range_area, get_world_2d().space)
+  Physics2DServer.area_set_monitor_callback(_range_area, self, "_on_range_area_body_monitor")
 
   for _group in unit_data.groups:
     add_to_group(_group)
