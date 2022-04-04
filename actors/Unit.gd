@@ -101,6 +101,9 @@ func _process(delta):
   if alive:
     if _health <= 0:
       alive = false
+      Store.set_team_state(team, "unit_count", Store.state[Store.get_team_key(team)].unit_count - 1)
+      if is_in_group("kings"):
+        Store.set_team_state(team, "alive", false)
       queue_free()
 
   if alive:
@@ -196,3 +199,5 @@ func _ready():
 
   _animation_player.play("idle")
   _animation_player.advance(rand_range(0.0, 0.25) * _animation_player.current_animation_length)
+
+  Store.set_team_state(team, "unit_count", Store.state[Store.get_team_key(team)].unit_count + 1)

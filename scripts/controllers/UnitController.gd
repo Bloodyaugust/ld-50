@@ -1,5 +1,7 @@
 extends Node2D
 
+const LEVEL_0:PackedScene = preload("res://scenes/level-0.tscn")
+
 var _drawing_selection:bool = false
 var _drawing_selection_start:Vector2
 
@@ -21,6 +23,16 @@ func _on_end_drawing_selection() -> void:
   Store.set_state("unit_selection", _selected_units)
   print("drawing ended")
   print(Store.state.unit_selection)
+
+func _on_store_state_changed(state_key:String, substate) -> void:
+  match state_key:
+    "game":
+      match substate:
+        GameConstants.GAME_STARTING:
+          var _level = LEVEL_0.instance()
+
+          get_tree().get_root().add_child(_level)
+          Store.set_state("game", GameConstants.GAME_IN_PROGRESS)
 
 func _unhandled_input(event:InputEvent):
   if Store.state.game == GameConstants.GAME_IN_PROGRESS:
@@ -48,4 +60,6 @@ func _process(delta):
   update()
 
 func _ready():
+  Store.connect("state_changed", self, "_on_store_state_changed")
+
   z_index = 10
