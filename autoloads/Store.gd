@@ -8,12 +8,13 @@ var state: Dictionary = {
   "game": "",
   "unit_selection": [],
   "debug": false,
-  "attack_move_command_modifier": false
+  "attack_move_command_modifier": false,
+  "level": null
  }
 
 func start_game() -> void:
   set_state("client_view", ClientConstants.CLIENT_VIEW_NONE)
-  set_state("game", GameConstants.GAME_STARTING)
+  set_state("game", GameConstants.GAME_IN_PROGRESS)
   set_state("unit_selection", [])
 
 func save_persistent_store() -> void:

@@ -177,3 +177,4 @@ func _ready():
     add_to_group(_group)
 
   _animation_player.play("idle")
+  _animation_player.advance(rand_range(0.0, 0.25) * _animation_player.current_animation_length)
