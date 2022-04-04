@@ -2,6 +2,7 @@ extends Node2D
 
 const SPAWN_INTERVAL:float = 1.5
 const UNIT_SCENE:PackedScene = preload("res://actors/Unit.tscn")
+const MAX_UNITS:int = 100
 
 export var team:int
 
@@ -13,7 +14,7 @@ func _on_after_unit_spawn(unit:Node2D) -> void:
 func _process(delta):
   _time_to_spawn -= delta
   
-  if _time_to_spawn <= 0:
+  if _time_to_spawn <= 0 && Store.state[Store.get_team_key(team)].unit_count < MAX_UNITS && Store.state[Store.get_team_key(team)].alive:
     var _new_unit:Node2D = UNIT_SCENE.instance()
     
     _new_unit.global_position = (GDUtil.random_in_unit_circle() * 15) + global_position - Vector2(0, 20)
