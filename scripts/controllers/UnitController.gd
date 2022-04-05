@@ -11,7 +11,9 @@ func _draw():
     draw_rect(Rect2(_drawing_selection_start, _size), Color.green, false)
 
 func _on_end_drawing_selection() -> void:
-  var _selection_rect:Rect2 = Rect2(_drawing_selection_start, get_global_mouse_position() - _drawing_selection_start)
+  var _mouse_global:Vector2 = get_global_mouse_position()
+  var _rect_start:Vector2 = Vector2(min(_mouse_global.x, _drawing_selection_start.x), min(_mouse_global.y, _drawing_selection_start.y))
+  var _selection_rect:Rect2 = Rect2(_rect_start, (get_global_mouse_position() - _drawing_selection_start).abs())
   var _units:Array = get_tree().get_nodes_in_group("units")
   var _selected_units:Array = []
 
